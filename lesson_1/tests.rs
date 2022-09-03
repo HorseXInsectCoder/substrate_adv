@@ -124,3 +124,16 @@ fn transfer_claim_failed_not_owner() {
         );
 	})
 }
+
+// 测试key超过最大长度
+#[test]
+fn claim_too_long() {
+	new_test_ext().execute_with(|| {
+		let claim = vec![1; i32::MAX.try_into().unwrap()];
+
+		assert_noop!(
+			PoeModule::create_claim(Origin::signed(1), claim.clone()),
+			Error::<Test>::ClaimTooLong
+		);
+	})
+}
